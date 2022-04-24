@@ -16,8 +16,8 @@ def index():
     </form>
     """
     form1 = """
-    <form method="post" action="/add" name="name1">
-        輸入學號：<input>
+    <form method="post" action="/add" >
+        輸入學號：<input name="add">
         <select name="name1">
             <option value="1245">1245 UNIX應用與實務</option>
             <option value="1260">1260 互連網路</option>
@@ -36,24 +36,33 @@ def index():
     return temp
 
 # 加選
-@app.route('/add',methods=['GET','POST'])
+@app.route('/add', methods=['GET', 'POST'])
 def add():
     sid=request.form.get("add")
     cid = request.form.get('name1')
+
     # 建立資料庫連線
     conn = MySQLdb.connect(host="127.0.0.1",
-                            user="hj",
-                            passwd="test1234",
-                            db="testdb")
+                        user="hj",
+                        passwd="test1234",
+                        db="testdb")
+    
     # 欲查詢的 query 指令
-    query = "INSERT INTO selection (s_id,c_id) VALUES ({},{})".format(sid,cid) #列出課表(必修)
-
+    query = "INSERT INTO selection() VALUES ('{}','{}');".format(sid, cid)  #加選
+    
+    s_credit=
+    
+    
+    
+    
+    results = """
+    <p><a href="/">Back to Query Interface</a></p>
+    """
     # 執行查詢
     cursor = conn.cursor()
     cursor.execute(query)
-    # posts=[dict(item=row[0], name=row[1]) for row in cur.fetchall()]
-    # conn.commit(posts)
-
+    conn.commit()
+    return results
 
 # 列出已選課表
 @app.route('/action', methods=['POST'])
@@ -62,9 +71,9 @@ def action():
     sid = request.form.get("sid")
     # 建立資料庫連線
     conn = MySQLdb.connect(host="127.0.0.1",
-                            user="hj",
-                            passwd="test1234",
-                            db="testdb")
+                        user="hj",
+                        passwd="test1234",
+                        db="testdb")
     # 欲查詢的 query 指令
     query = "SELECT c_name FROM compulsory where c_id in (SELECT c_id FROM selection where s_id= '{}');".format(sid) #列出課表(必修)
 
@@ -72,11 +81,10 @@ def action():
     cursor = conn.cursor()
     cursor.execute(query)
 
-    
     results = """
     <p><a href="/">Back to Query Interface</a></p>
     """
     # 取得並列出所有查詢結果
-    for (c_name,) in cursor.fetchall():
+    for (c_name, ) in cursor.fetchall():
         results += "<p>{}</p>".format(c_name)
     return results
