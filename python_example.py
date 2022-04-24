@@ -18,7 +18,7 @@ def index():
     form1 = """
     <form method="post" action="/add" >
         輸入學號：<input name="add">
-        <select>
+        <select name="name1">
             <option value="1245">1245 UNIX應用與實務</option>
             <option value="1260">1260 互連網路</option>
             <option value="1261">1261 組合數學</option>
@@ -36,21 +36,23 @@ def index():
     return temp
 
 # 加選
-@app.route('/add')
+@app.route('/add', methods=['GET', 'POST'])
 def add():
     sid=request.form.get("add")
-    cid = request.form.get("value")
+    cid = request.form.get('name1')
+    
     # 建立資料庫連線
     conn = MySQLdb.connect(host="127.0.0.1",
-                           user="hj",
-                           passwd="test1234",
-                           db="testdb")
+                        user="hj",
+                        passwd="test1234",
+                        db="testdb")
     # 欲查詢的 query 指令
-    query = "INSERT INTO selection (s_id,c_id) VALUES ({},{})" .format(sid,cid) #列出課表(必修)
+    query = "INSERT INTO selection (s_id,c_id) VALUES (sid,cid)"  #列出課表(必修)
 
     # 執行查詢
     cursor = conn.cursor()
     cursor.execute(query)
+    conn.commit()
 
 
 # 列出已選課表
@@ -60,9 +62,9 @@ def action():
     sid = request.form.get("sid")
     # 建立資料庫連線
     conn = MySQLdb.connect(host="127.0.0.1",
-                           user="hj",
-                           passwd="test1234",
-                           db="testdb")
+                        user="hj",
+                        passwd="test1234",
+                        db="testdb")
     # 欲查詢的 query 指令
     query = "SELECT c_name FROM compulsory where c_id in (SELECT c_id FROM selection where s_id= '{}');".format(sid) #列出課表(必修)
 
