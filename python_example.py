@@ -47,22 +47,60 @@ def add():
                         passwd="test1234",
                         db="testdb")
     
-    # 欲查詢的 query 指令
-    query = "INSERT INTO selection() VALUES ('{}','{}');".format(sid, cid)  #加選
-    
-    s_credit=
-    
-    
-    
-    
     results = """
-    <p><a href="/">Back to Query Interface</a></p>
+    <p><a href="/">回到首頁</a></p>
     """
-    # 執行查詢
+    
+    c_credit = "SELECT credit FROM elective where c_id='{}'".format(cid)   #欲選學分數
+    # 執行查詢(選課學分)
     cursor = conn.cursor()
-    cursor.execute(query)
-    conn.commit()
+    cursor.execute(c_credit)
+    for i in cursor.fetchone():
+        c_credit = i
+    s_credit = "SELECT total_credit FROM student where s_id='{}'".format(sid)   #已選學分數
+    # 執行查詢(已選學分)
+    cursor = conn.cursor()
+    cursor.execute(s_credit)
+    for i in cursor.fetchone():
+        s_credit = i
+    t_credit = s_credit + c_credit
+    if t_credit > 30:
+        results += '超過可選之學分'
+        return results        #判斷最高學分
+    
+    max_count = "SELECT s_limit FROM elective where c_id='{}'".format(cid)   #最高選課人數
+    # 執行查詢(最高選課人數)
+    cursor = conn.cursor()
+    cursor.execute(max_count)
+    for i in cursor.fetchone():
+        max_count = i
+    cur_count = "SELECT count FROM elective where c_id='{}'".format(cid)   #目前選課人數
+    # 執行查詢(目前選課人數)
+    cursor = conn.cursor()
+    cursor.execute(cur_count)
+    for i in cursor.fetchone():
+        cur_count = i
+    if max_count == cur_count:
+        results += '已達人數上限'
+        return results 
+    
+    I_classId = "INSERT INTO selection() VALUES ('{}','{}');".format(sid, cid)    #插入加選代號
+    # 執行查詢(選課代號)
+    cursor = conn.cursor()
+    cursor.execute(I_classId)
+    conn.commit() #插入選課列表中
+    cur_count += 1
+    up_count = "UPDATE elective SET count = '{}'".format(cur_count)
+    cursor = conn.cursor()
+    cursor.execute(up_count)
+    conn.commit() #選課人數加一
+    up_credit = "UPDATE student SET total_credit = '{}'".format(t_credit)
+    cursor = conn.cursor()
+    cursor.execute(up_credit)
+    conn.commit() #總學分改變
+    results += '加選成功'
     return results
+
 
 # 列出已選課表
 @app.route('/action', methods=['POST'])
@@ -82,7 +120,7 @@ def action():
     cursor.execute(query)
 
     results = """
-    <p><a href="/">Back to Query Interface</a></p>
+    <p><a href="/">回到首頁</a></p>
     """
     # 取得並列出所有查詢結果
     for (c_name, ) in cursor.fetchall():
