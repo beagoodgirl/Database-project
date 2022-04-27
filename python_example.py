@@ -4,6 +4,12 @@
 from flask import Flask, request, render_template, session, redirect, url_for
 import MySQLdb
 
+# 建立資料庫連線
+conn = MySQLdb.connect(host="127.0.0.1",
+                        user="hj",
+                        passwd="test1234",
+                        db="testdb")
+
 app = Flask(__name__)
 app.secret_key = "super secret key"
 
@@ -18,11 +24,7 @@ def home():
 
 @app.route('/login',methods=['GET', 'POST'])
 def login():
-    # 建立資料庫連線
-    conn = MySQLdb.connect(host="127.0.0.1",
-                        user="hj",
-                        passwd="test1234",
-                        db="testdb")
+    
     msg=''
     if request.method=='POST':
         username = request.form['username']
@@ -32,15 +34,21 @@ def login():
         cursor.execute(user)
         record = cursor.fetchone()
         if record:
-            session['loggedin'] = True
+            session['logged'] = True
             session['username'] = record[0]
             return redirect(url_for('home'))
         else:
             msg='帳號/密碼有誤，請再次嘗試'
             return msg
-    return render_template('home.html')
+    return render_template("login.html")
             
         
+@app.route('/logout')
+def logout():
+    session.pop('logged', None)
+    session.pop('username', None)
+    return redirect(url_for('login'))  
+
 
 #將必修直接加入已選課表
 @app.route('/compulsory' , methods=['POST'])

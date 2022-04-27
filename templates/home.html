@@ -7,6 +7,12 @@
     <title>Document</title>
 </head>
 <body>
+    <div>
+        <h2>Welcome, {{username}}!
+            <a href="{{url_for('logout')}}">登出</a>
+        </h2>
+    </div>
+    
     <form method="post" action="/action" >
         輸入學號：<input name="sid">
         <input type="submit" value="查詢課程">
@@ -31,5 +37,16 @@
         輸入課號：<input name="name2">
         <input type="submit" value="退選">
     </form>
+    
+    <form method="post" action="/FocusOn" > 
+        輸入學號：<input name="sid1">
+        輸入課號：<input name="focus">
+        <input type="submit" value="關注課程">
+    </form>
+    <form method="post" action="/SearchFocus" >
+        輸入學號：<input name="sid2">
+        <input type="submit" value="列出選課列表">
+    </form> 
+
 </body>
 </html>
