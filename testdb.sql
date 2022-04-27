@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Apr 24, 2022 at 05:13 AM
+-- Generation Time: Apr 27, 2022 at 02:20 PM
 -- Server version: 10.4.22-MariaDB
 -- PHP Version: 8.1.1
 
@@ -115,7 +115,7 @@ CREATE TABLE `elective` (
 --
 
 INSERT INTO `elective` (`c_id`, `c_name`, `dept_name`, `dept_grade`, `s_limit`, `credit`, `count`) VALUES
-(1245, 'UNIX應用與實務', '資訊系', 2, 4, 2, 0),
+(1245, 'UNIX應用與實務', '資訊系', 2, 4, 2, 1),
 (1260, '互連網路', '資訊系', 2, 3, 3, 0),
 (1261, '組合數學', '資訊系', 2, 3, 3, 0),
 (2764, '人生哲學', '通識', 0, 4, 2, 0),
@@ -163,7 +163,6 @@ CREATE TABLE `selection` (
 --
 
 INSERT INTO `selection` (`s_id`, `c_id`) VALUES
-('D0947803', 1247),
 ('D0947803', 1248),
 ('D0947803', 1249),
 ('D0947803', 3449),
@@ -174,7 +173,8 @@ INSERT INTO `selection` (`s_id`, `c_id`) VALUES
 ('D0948507', 1247),
 ('D0948507', 1248),
 ('D0948507', 1249),
-('D0948507', 3449);
+('D0948507', 3449),
+('D0947803', 1247);
 
 -- --------------------------------------------------------
 
@@ -200,6 +200,27 @@ INSERT INTO `student` (`s_id`, `s_name`, `dept_name`, `register_year`, `total_cr
 ('D0947803', '顏莉恬', '資訊系', 2020, 10),
 ('D0948005', '王瀚鍾', '資訊系', 2020, 10),
 ('D0948507', '吳芊汝', '資訊系', 2020, 10);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `username`
+--
+
+CREATE TABLE `username` (
+  `username` varchar(30) NOT NULL,
+  `password` varchar(30) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `username`
+--
+
+INSERT INTO `username` (`username`, `password`) VALUES
+('D0947803', 'a1234567894512'),
+('D0948005', 'asdf12345678'),
+('D0948507', 'qwer15789461'),
+('D1234567', 'asdfgh124578');
 
 --
 -- Indexes for dumped tables
