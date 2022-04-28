@@ -8,7 +8,7 @@
 </head>
 <body>
     <div>
-        <h2>Welcome, {{username}}!
+        <h2 id = "username">Welcome, {{username}}!
             <a href="{{url_for('logout')}}">登出</a>
         </h2>
     </div>
@@ -45,7 +45,15 @@
     </form>
     <form method="post" action="/SearchFocus" >
         輸入學號：<input name="sid2">
-        <input type="submit" value="列出選課列表">
+        <input type="submit" value="列出關注列表">
+    </form> 
+
+    <form action="/can" >
+        <input type="submit" value="查詢可選課程">
+    </form> 
+    <br>
+    <form action="/compulsory" >
+        <input type="submit" value="將必修加入課表">
     </form> 
 
 </body>
